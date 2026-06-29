@@ -122,10 +122,10 @@ class Book(object):
                 (order.qty <= counter_side.volume or
                  self.__params["PartialExecution"]):
             while not matched and len(counter_side.prices) > 0:
-                for counter_price in counter_side.prices:
+                for counter_price in list(counter_side.prices):
                     level = counter_side.get(counter_price)
 
-                    for counter_order in level:
+                    for counter_order in list(level):
                         actual_qty = None
                         actual_counter_qty = None
 
@@ -144,6 +144,9 @@ class Book(object):
                                        amt=actual_qty)
                         self.__execute(counter_order, price=counter_order.price,
                                        amt=actual_counter_qty)
+
+                        if matched:  # aggressor exhausted, stop this level
+                            break
 
                     if matched:  # done, so terminate
                         break

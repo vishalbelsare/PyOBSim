@@ -57,7 +57,7 @@ class Side(object):
         self.__data[order.price].append(order)
 
     def remove(self, id):
-        for price in self.prices:
+        for price in list(self.prices):
             level = self.get(price)
 
             # traverse price level, searching for order with the required id
@@ -65,12 +65,12 @@ class Side(object):
                 if order.id == id:
                     level.remove(order)
 
-                # prune price level if now empty
-                if len(level) == 0:
-                    self.__data.pop(price)
-                    self.__prices.remove(price)
+                    # prune price level if now empty
+                    if len(level) == 0:
+                        self.__data.pop(price)
+                        self.__prices.remove(price)
 
-                break
+                    return
 
     def num_orders(self):
         n = 0
